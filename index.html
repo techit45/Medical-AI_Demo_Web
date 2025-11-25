@@ -1,0 +1,762 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Trust Healthcare AI (Mockup)</title>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Google Fonts: Sarabun + Prompt -->
+    <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600&family=Sarabun:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Sarabun', 'sans-serif'],
+                        display: ['Prompt', 'sans-serif'],
+                    },
+                    colors: {
+                        teal: {
+                            50: '#f0fdfa',
+                            100: '#ccfbf1',
+                            400: '#2dd4bf',
+                            500: '#14b8a6', // Main Theme Color
+                            600: '#0d9488',
+                            700: '#0f766e', // Sidebar Color
+                            800: '#115e59',
+                            900: '#134e4a',
+                        },
+                        paper: '#fcfcfc',
+                    },
+                    boxShadow: {
+                        'card': '0 2px 5px rgba(0,0,0,0.05)',
+                        'paper': '1px 1px 3px rgba(0,0,0,0.1)',
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        body { font-family: 'Sarabun', sans-serif; background-color: #eef2f5; }
+        h1, h2, h3, h4 { font-family: 'Prompt', sans-serif; }
+        
+        .hide-scrollbar::-webkit-scrollbar { display: none; }
+        
+        /* Custom Checkbox Style from image */
+        .custom-checkbox {
+            appearance: none;
+            width: 16px;
+            height: 16px;
+            border: 2px solid #cbd5e1;
+            border-radius: 2px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s;
+        }
+        .custom-checkbox:checked {
+            background-color: #14b8a6;
+            border-color: #14b8a6;
+        }
+        .custom-checkbox:checked::after {
+            content: '\f00c';
+            font-family: 'Font Awesome 6 Free';
+            font-weight: 900;
+            font-size: 10px;
+            color: white;
+        }
+
+        /* Post-it Note Style */
+        .post-it {
+            background-color: #fef08a; /* Yellow */
+            box-shadow: 2px 2px 5px rgba(0,0,0,0.1);
+            transform: rotate(-1deg);
+        }
+
+        /* Lined Paper Style */
+        .lined-paper {
+            background-image: repeating-linear-gradient(transparent, transparent 31px, #e2e8f0 31px, #e2e8f0 32px);
+            line-height: 32px;
+            padding-top: 6px;
+        }
+
+        .nav-active {
+            border-left: 4px solid #2dd4bf;
+            background-color: rgba(255,255,255,0.1);
+        }
+        
+        /* Smiley Face CSS */
+        .face-circle {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            background: #f1f5f9;
+            position: relative;
+            box-shadow: inset 0 2px 5px rgba(0,0,0,0.05);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .face-eyes {
+            display: flex;
+            gap: 30px;
+            margin-bottom: 10px;
+        }
+        .eye {
+            width: 12px;
+            height: 12px;
+            background: #334155;
+            border-radius: 50%;
+        }
+        .face-smile {
+            width: 60px;
+            height: 30px;
+            border-bottom: 4px solid #14b8a6; /* Teal Smile */
+            border-radius: 0 0 30px 30px;
+            position: absolute;
+            bottom: 35px;
+        }
+        .face-status-bar {
+            position: absolute;
+            right: -60px;
+            top: 40px;
+            background: #14b8a6;
+            color: white;
+            padding: 4px 12px;
+            border-radius: 4px;
+            font-weight: bold;
+            font-size: 14px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .face-status-bar::before {
+            content: '';
+            position: absolute;
+            left: -6px;
+            top: 50%;
+            transform: translateY(-50%);
+            border-width: 6px 6px 6px 0;
+            border-color: transparent #14b8a6 transparent transparent;
+        }
+    </style>
+</head>
+<body class="h-screen flex overflow-hidden">
+
+    <!-- Left Sidebar (Dark Teal) -->
+    <aside class="w-20 md:w-64 bg-teal-800 text-white flex flex-col shadow-xl z-20">
+        <!-- Logo Area -->
+        <div class="h-20 flex items-center justify-center md:justify-start md:px-6 border-b border-teal-700/50">
+            <i class="fa-solid fa-stethoscope text-2xl text-teal-300"></i>
+            <div class="hidden md:block ml-3">
+                <h1 class="font-bold text-lg leading-tight">TRUST <span class="text-teal-300">HEALTH</span></h1>
+                <p class="text-[10px] text-teal-200 tracking-wider">AI ASSISTANT</p>
+            </div>
+        </div>
+
+        <!-- Navigation -->
+        <nav class="flex-1 py-6 space-y-1">
+            <button onclick="switchTab('dashboard')" id="nav-dashboard" class="w-full flex flex-col md:flex-row items-center md:px-6 py-4 text-teal-100 hover:bg-teal-700/50 transition-colors nav-active group">
+                <i class="fa-solid fa-chart-simple text-xl md:w-8 text-center group-hover:text-white"></i>
+                <span class="text-[10px] md:text-sm md:font-medium mt-1 md:mt-0 hidden md:block group-hover:text-white">DASHBOARD</span>
+            </button>
+            <button onclick="switchTab('analyze')" id="nav-analyze" class="w-full flex flex-col md:flex-row items-center md:px-6 py-4 text-teal-100 hover:bg-teal-700/50 transition-colors group">
+                <i class="fa-solid fa-file-medical text-xl md:w-8 text-center group-hover:text-white"></i>
+                <span class="text-[10px] md:text-sm md:font-medium mt-1 md:mt-0 hidden md:block group-hover:text-white">ANALYSIS</span>
+            </button>
+            <button onclick="switchTab('chat')" id="nav-chat" class="w-full flex flex-col md:flex-row items-center md:px-6 py-4 text-teal-100 hover:bg-teal-700/50 transition-colors group">
+                <i class="fa-solid fa-user-doctor text-xl md:w-8 text-center group-hover:text-white"></i>
+                <span class="text-[10px] md:text-sm md:font-medium mt-1 md:mt-0 hidden md:block group-hover:text-white">AI DOCTOR</span>
+            </button>
+            <button onclick="switchTab('search')" id="nav-search" class="w-full flex flex-col md:flex-row items-center md:px-6 py-4 text-teal-100 hover:bg-teal-700/50 transition-colors group">
+                <i class="fa-solid fa-magnifying-glass text-xl md:w-8 text-center group-hover:text-white"></i>
+                <span class="text-[10px] md:text-sm md:font-medium mt-1 md:mt-0 hidden md:block group-hover:text-white">SEARCH</span>
+            </button>
+        </nav>
+
+        <!-- Bottom Status -->
+        <div class="p-4 bg-teal-900/50 text-center md:text-left">
+            <div class="flex flex-col md:flex-row items-center gap-2 justify-center md:justify-start">
+                <div id="status-dot" class="w-2 h-2 rounded-full bg-gray-400"></div>
+                <span id="backend-status" class="text-[10px] text-teal-200">Checking...</span>
+            </div>
+        </div>
+    </aside>
+
+    <!-- Main Content Area -->
+    <main class="flex-1 flex flex-col h-full relative overflow-hidden">
+        
+        <!-- Top Header Bar -->
+        <header class="h-16 bg-white shadow-sm flex items-center justify-between px-6 z-10">
+            <h2 class="text-xl font-bold text-gray-700 flex items-center gap-2">
+                <span id="page-title" class="text-teal-600">DASHBOARD</span>
+                <span class="text-gray-300 text-sm font-normal">| Overview</span>
+            </h2>
+            <div class="flex items-center gap-4">
+                <button class="w-8 h-8 rounded-full bg-gray-100 text-gray-500 hover:bg-teal-50 hover:text-teal-600 transition-colors">
+                    <i class="fa-regular fa-bell"></i>
+                </button>
+                <div class="flex items-center gap-2 pl-4 border-l">
+                    <div class="w-8 h-8 rounded-full bg-teal-100 text-teal-600 flex items-center justify-center font-bold text-xs">DR</div>
+                    <span class="text-sm font-medium text-gray-600 hidden md:block">Dr. AI Assistant</span>
+                </div>
+            </div>
+        </header>
+
+        <!-- Scrollable Content -->
+        <div class="flex-1 overflow-y-auto p-4 md:p-6 bg-[#eef2f5]">
+            
+            <!-- Toast -->
+            <div id="toast" class="fixed top-20 right-5 z-50 transform translate-x-full transition-transform duration-300 bg-white shadow-lg rounded border-l-4 border-teal-500 p-4 flex items-center gap-3">
+                <div id="toast-icon" class="text-teal-600"></div>
+                <div>
+                    <h4 id="toast-title" class="font-bold text-sm text-gray-800">Notification</h4>
+                    <p id="toast-message" class="text-xs text-gray-500">Message goes here</p>
+                </div>
+            </div>
+
+            <!-- VIEW 1: DASHBOARD (Trust Health Style) -->
+            <div id="view-dashboard" class="animate-view max-w-7xl mx-auto">
+                
+                <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-6">
+                    <!-- Main Stats Card (Wide) -->
+                    <div class="lg:col-span-2 bg-white rounded shadow-card p-6">
+                        <div class="flex justify-between items-center mb-6 border-b border-gray-100 pb-2">
+                            <h3 class="font-bold text-gray-700 uppercase text-sm tracking-wide">Daily Overview</h3>
+                            <span class="text-xs text-gray-400">TODAY: <span class="text-gray-600 font-medium" id="current-date">Fri, 24 Nov</span></span>
+                        </div>
+
+                        <div class="flex flex-col md:flex-row items-center gap-8">
+                            <!-- Smiley Section -->
+                            <div class="flex flex-col items-center justify-center p-4">
+                                <div class="face-circle">
+                                    <div class="face-eyes">
+                                        <div class="eye"></div>
+                                        <div class="eye"></div>
+                                    </div>
+                                    <div class="face-smile"></div>
+                                    <div class="face-status-bar">ONLINE</div>
+                                </div>
+                                <div class="mt-4 text-center">
+                                    <p class="text-xs text-gray-400">SYSTEM STATUS</p>
+                                    <p class="text-teal-600 font-bold text-lg">EXCELLENT</p>
+                                </div>
+                            </div>
+
+                            <!-- Stats List -->
+                            <div class="flex-1 w-full space-y-3">
+                                <!-- Stat Item 1 -->
+                                <div class="flex items-center justify-between bg-gray-50 p-3 rounded hover:bg-teal-50 transition-colors group">
+                                    <div class="flex items-center gap-3">
+                                        <i class="fa-solid fa-users text-gray-400 group-hover:text-teal-500"></i>
+                                        <span class="text-sm font-medium text-gray-600">Total Patients</span>
+                                    </div>
+                                    <div class="flex items-center gap-4">
+                                        <span class="text-lg font-bold text-gray-800" id="dash-total">--</span>
+                                        <button class="w-6 h-6 bg-teal-600 text-white rounded text-xs hover:bg-teal-700"><i class="fa-solid fa-plus"></i></button>
+                                    </div>
+                                </div>
+                                <!-- Stat Item 2 -->
+                                <div class="flex items-center justify-between bg-gray-50 p-3 rounded hover:bg-teal-50 transition-colors group">
+                                    <div class="flex items-center gap-3">
+                                        <i class="fa-solid fa-cake-candles text-gray-400 group-hover:text-teal-500"></i>
+                                        <span class="text-sm font-medium text-gray-600">Avg. Age</span>
+                                    </div>
+                                    <div class="flex items-center gap-4">
+                                        <span class="text-lg font-bold text-gray-800" id="dash-age">--</span>
+                                        <button class="w-6 h-6 bg-teal-600 text-white rounded text-xs hover:bg-teal-700"><i class="fa-solid fa-plus"></i></button>
+                                    </div>
+                                </div>
+                                <!-- Stat Item 3 -->
+                                <div class="flex items-center justify-between bg-gray-50 p-3 rounded hover:bg-teal-50 transition-colors group">
+                                    <div class="flex items-center gap-3">
+                                        <i class="fa-solid fa-notes-medical text-gray-400 group-hover:text-teal-500"></i>
+                                        <span class="text-sm font-medium text-gray-600">Conditions</span>
+                                    </div>
+                                    <div class="flex items-center gap-4">
+                                        <span class="text-lg font-bold text-gray-800" id="dash-conditions">--</span>
+                                        <button class="w-6 h-6 bg-teal-600 text-white rounded text-xs hover:bg-teal-700"><i class="fa-solid fa-plus"></i></button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Bottom Icons Row (Mimic Food/Activity) -->
+                        <div class="mt-8 pt-6 border-t border-gray-100">
+                            <div class="grid grid-cols-5 gap-2 text-center" id="blood-icons-container">
+                                <!-- Will be filled by JS -->
+                                <div class="animate-pulse bg-gray-100 h-16 rounded"></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Side Widgets -->
+                    <div class="space-y-6">
+                        <!-- Lined Paper Widget -->
+                        <div class="bg-white rounded shadow-card p-6 h-64 overflow-hidden relative">
+                            <div class="absolute top-0 left-0 w-full h-1 bg-teal-500"></div>
+                            <h3 class="font-bold text-gray-700 uppercase text-xs mb-2 flex items-center gap-2">
+                                <i class="fa-regular fa-comment-dots"></i> Doctor's Suggestion
+                            </h3>
+                            <div class="lined-paper text-sm text-gray-600 h-full font-handwriting italic">
+                                <ul class="list-disc pl-4 space-y-1">
+                                    <li>Monitor patient vitals daily.</li>
+                                    <li>Review X-ray results for Case #12.</li>
+                                    <li>Update AI Model with new dataset.</li>
+                                    <li class="text-teal-600 font-semibold">Meeting at 2 PM.</li>
+                                </ul>
+                            </div>
+                        </div>
+
+                        <!-- Post-it Widget -->
+                        <div class="post-it p-4 relative">
+                            <h3 class="font-bold text-gray-800 uppercase text-xs mb-2"><i class="fa-solid fa-heart-pulse"></i> Health Tips</h3>
+                            <p class="text-xs text-gray-700 leading-relaxed font-serif">
+                                "Reduce fat intake, cut down on sugar and opt for fruits and vegetables. This helps reduce cholesterol and blood pressure."
+                            </p>
+                            <div class="flex justify-center mt-2 gap-1">
+                                <div class="w-1 h-1 bg-gray-400 rounded-full"></div>
+                                <div class="w-1 h-1 bg-gray-600 rounded-full"></div>
+                                <div class="w-1 h-1 bg-gray-400 rounded-full"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Conditions Chart Area -->
+                <div class="bg-white rounded shadow-card p-6">
+                    <h3 class="font-bold text-gray-700 uppercase text-sm mb-4">Top Medical Conditions</h3>
+                    <div class="grid grid-cols-2 md:grid-cols-4 gap-4" id="conditions-grid">
+                        <!-- JS filled -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- VIEW 2: ANALYZE -->
+            <div id="view-analyze" class="hidden animate-view max-w-5xl mx-auto">
+                <div class="bg-white rounded shadow-card p-8">
+                    <div class="flex items-center justify-between mb-6 border-b pb-4">
+                        <h3 class="text-xl font-bold text-teal-800">AI Diagnosis (Simulation)</h3>
+                        <div class="text-sm text-gray-500">Supports: X-Ray & Blood Cells</div>
+                    </div>
+
+                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                        <div class="space-y-6">
+                            <form id="analyze-form" class="space-y-4">
+                                <div class="space-y-2">
+                                    <label class="text-sm font-bold text-gray-600 uppercase">Analysis Type</label>
+                                    <div class="flex gap-4">
+                                        <label class="flex-1 cursor-pointer">
+                                            <input type="radio" name="type" value="xray" class="peer hidden" checked id="type-xray">
+                                            <div class="border-2 border-gray-200 peer-checked:border-teal-500 peer-checked:bg-teal-50 rounded p-3 text-center transition-all">
+                                                <i class="fa-solid fa-x-ray block text-xl mb-1 text-gray-400 peer-checked:text-teal-600"></i>
+                                                <span class="text-xs font-bold text-gray-600 peer-checked:text-teal-800">X-Ray</span>
+                                            </div>
+                                        </label>
+                                        <label class="flex-1 cursor-pointer">
+                                            <input type="radio" name="type" value="blood" class="peer hidden" id="type-blood">
+                                            <div class="border-2 border-gray-200 peer-checked:border-teal-500 peer-checked:bg-teal-50 rounded p-3 text-center transition-all">
+                                                <i class="fa-solid fa-droplet block text-xl mb-1 text-gray-400 peer-checked:text-teal-600"></i>
+                                                <span class="text-xs font-bold text-gray-600 peer-checked:text-teal-800">Blood Cell</span>
+                                            </div>
+                                        </label>
+                                    </div>
+                                </div>
+
+                                <div class="space-y-2">
+                                    <label class="text-sm font-bold text-gray-600 uppercase">Upload Image</label>
+                                    <div class="border-2 border-dashed border-gray-300 rounded bg-gray-50 hover:bg-white transition-colors p-8 text-center relative cursor-pointer">
+                                        <input type="file" id="image-input" class="absolute inset-0 w-full h-full opacity-0 cursor-pointer" accept="image/*" required>
+                                        <div id="upload-placeholder">
+                                            <i class="fa-solid fa-cloud-arrow-up text-3xl text-teal-300 mb-2"></i>
+                                            <p class="text-sm text-gray-500 font-medium">Drop file or click to upload</p>
+                                        </div>
+                                        <div id="file-preview-info" class="hidden">
+                                            <img id="preview-thumb" class="h-32 mx-auto rounded shadow-sm object-contain mb-2 bg-black">
+                                            <p id="file-name" class="text-xs text-teal-600 font-bold"></p>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <button type="submit" class="w-full bg-teal-600 text-white font-bold py-3 rounded shadow-md hover:bg-teal-700 transition-colors uppercase tracking-wider text-sm">
+                                    Start Analysis
+                                </button>
+                            </form>
+                        </div>
+
+                        <!-- Results Area -->
+                        <div class="bg-gray-50 rounded border border-gray-200 p-6 flex flex-col items-center justify-center min-h-[300px]">
+                            <div id="analysis-loading" class="hidden text-center">
+                                <div class="animate-spin text-4xl text-teal-500 mb-3"><i class="fa-solid fa-circle-notch"></i></div>
+                                <p class="text-gray-500 text-sm font-medium">AI Processing (Mock)...</p>
+                            </div>
+                            
+                            <div id="analysis-empty" class="text-center text-gray-400">
+                                <i class="fa-regular fa-image text-5xl mb-3 opacity-30"></i>
+                                <p class="text-sm">Results will appear here</p>
+                            </div>
+
+                            <div id="analysis-result" class="hidden w-full">
+                                <div class="bg-white p-4 rounded shadow-sm mb-4 border-l-4 border-teal-500">
+                                    <h4 class="text-xs font-bold text-gray-400 uppercase mb-1">Result</h4>
+                                    <div id="result-content" class="text-gray-800"></div>
+                                </div>
+                                <div class="bg-white p-4 rounded shadow-sm">
+                                    <h4 class="text-xs font-bold text-gray-400 uppercase mb-2">Confidence</h4>
+                                    <div class="w-full bg-gray-200 rounded-full h-2">
+                                        <div id="confidence-bar" class="bg-teal-500 h-2 rounded-full" style="width: 0%"></div>
+                                    </div>
+                                    <p id="confidence-text" class="text-right text-xs font-bold text-teal-600 mt-1">0%</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- VIEW 3: CHAT -->
+            <div id="view-chat" class="hidden animate-view max-w-4xl mx-auto h-[calc(100vh-140px)] flex flex-col">
+                <div class="bg-white rounded-t shadow-sm border-b p-4 flex justify-between items-center">
+                    <div class="flex items-center gap-3">
+                        <div class="w-10 h-10 rounded-full bg-teal-100 flex items-center justify-center text-teal-600">
+                            <i class="fa-solid fa-user-doctor"></i>
+                        </div>
+                        <div>
+                            <h3 class="font-bold text-gray-800">AI Medical Consultant</h3>
+                            <p class="text-xs text-green-500 flex items-center gap-1"><span class="w-1.5 h-1.5 bg-green-500 rounded-full"></span> Online (Bot)</p>
+                        </div>
+                    </div>
+                    <button onclick="clearChat()" class="text-gray-400 hover:text-red-500 text-sm"><i class="fa-solid fa-trash-can"></i></button>
+                </div>
+
+                <div id="chat-messages" class="flex-1 bg-white p-6 overflow-y-auto space-y-4">
+                    <!-- Welcome -->
+                    <div class="flex gap-4">
+                        <div class="w-8 h-8 rounded-full bg-teal-600 text-white flex items-center justify-center shrink-0 text-xs">AI</div>
+                        <div class="bg-gray-100 p-3 rounded-tr-xl rounded-br-xl rounded-bl-xl text-sm text-gray-700 max-w-[80%]">
+                            สวัสดีครับ ผมคือ AI ผู้ช่วยแพทย์ (ระบบจำลอง) ยินดีให้คำปรึกษาครับ
+                        </div>
+                    </div>
+                </div>
+
+                <div class="p-4 bg-white rounded-b shadow-sm border-t">
+                    <form id="chat-form" class="flex gap-2">
+                        <input type="text" id="chat-input" class="flex-1 bg-gray-50 border border-gray-200 rounded px-4 py-3 focus:outline-none focus:border-teal-500 text-sm" placeholder="พิมพ์ข้อความ... (ระบบจะตอบกลับอัตโนมัติ)" required autocomplete="off">
+                        <button type="submit" class="bg-teal-600 text-white px-6 rounded hover:bg-teal-700 font-bold uppercase text-xs tracking-wider">Send</button>
+                    </form>
+                </div>
+            </div>
+
+            <!-- VIEW 4: SEARCH -->
+            <div id="view-search" class="hidden animate-view max-w-6xl mx-auto">
+                <div class="bg-white rounded shadow-card p-6 mb-6">
+                    <form id="search-form" class="flex gap-4">
+                        <div class="w-1/4">
+                            <select id="search-type" class="w-full bg-gray-50 border border-gray-200 rounded px-3 py-3 text-sm focus:outline-none focus:border-teal-500 text-gray-600 font-medium">
+                                <option value="name">Patient Name</option>
+                                <option value="condition">Medical Condition</option>
+                                <option value="blood_type">Blood Type</option>
+                            </select>
+                        </div>
+                        <div class="flex-1">
+                            <input type="text" id="search-query" class="w-full bg-gray-50 border border-gray-200 rounded px-4 py-3 text-sm focus:outline-none focus:border-teal-500" placeholder="Enter keywords..." required>
+                        </div>
+                        <button type="submit" class="bg-teal-600 text-white px-8 rounded font-bold uppercase text-sm hover:bg-teal-700">Search</button>
+                    </form>
+                </div>
+
+                <div class="bg-white rounded shadow-card overflow-hidden">
+                    <table class="w-full text-left border-collapse">
+                        <thead class="bg-teal-50 border-b border-teal-100">
+                            <tr>
+                                <th class="p-4 text-xs font-bold text-teal-800 uppercase">Name</th>
+                                <th class="p-4 text-xs font-bold text-teal-800 uppercase">Age</th>
+                                <th class="p-4 text-xs font-bold text-teal-800 uppercase">Gender</th>
+                                <th class="p-4 text-xs font-bold text-teal-800 uppercase">Blood</th>
+                                <th class="p-4 text-xs font-bold text-teal-800 uppercase">Condition</th>
+                                <th class="p-4 text-xs font-bold text-teal-800 uppercase">Insurance</th>
+                            </tr>
+                        </thead>
+                        <tbody id="search-results" class="divide-y divide-gray-100 text-sm text-gray-600">
+                            <tr><td colspan="6" class="p-8 text-center text-gray-400 italic">Enter search criteria above</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+        </div>
+    </main>
+
+    <!-- Scripts -->
+    <script>
+        // --- Mockup Configuration ---
+        // ระบบจำลองข้อมูล (ไม่ต้องใช้ Backend)
+        
+        // --- Init ---
+        // Current Date
+        const dateOptions = { weekday: 'short', day: 'numeric', month: 'short' };
+        document.getElementById('current-date').textContent = new Date().toLocaleDateString('en-US', dateOptions);
+
+        document.addEventListener('DOMContentLoaded', () => {
+            initMockSystem();
+            
+            // Image Upload Preview
+            document.getElementById('image-input').addEventListener('change', function(e) {
+                if(this.files && this.files[0]) {
+                    const reader = new FileReader();
+                    reader.onload = (e) => {
+                        document.getElementById('preview-thumb').src = e.target.result;
+                        document.getElementById('file-name').textContent = this.files[0].name;
+                        document.getElementById('upload-placeholder').classList.add('hidden');
+                        document.getElementById('file-preview-info').classList.remove('hidden');
+                    }
+                    reader.readAsDataURL(this.files[0]);
+                }
+            });
+        });
+
+        function initMockSystem() {
+            // Set Status to Mockup/Demo Mode
+            document.getElementById('backend-status').innerHTML = 'Mockup Mode';
+            document.getElementById('backend-status').classList.add('text-green-500', 'font-bold');
+            document.getElementById('status-dot').className = 'w-2 h-2 rounded-full bg-green-500 animate-pulse';
+            
+            // Load Mock Dashboard Data
+            loadMockDashboard();
+        }
+
+        // --- Navigation ---
+        function switchTab(tabName) {
+            ['dashboard', 'analyze', 'chat', 'search'].forEach(t => {
+                document.getElementById(`view-${t}`).classList.add('hidden');
+                const navBtn = document.getElementById(`nav-${t}`);
+                if(navBtn) {
+                    if (t === tabName) {
+                        navBtn.classList.add('nav-active', 'bg-teal-700/30');
+                        navBtn.classList.remove('text-teal-100');
+                        navBtn.classList.add('text-white');
+                    } else {
+                        navBtn.classList.remove('nav-active', 'bg-teal-700/30', 'text-white');
+                        navBtn.classList.add('text-teal-100');
+                    }
+                }
+            });
+            document.getElementById(`view-${tabName}`).classList.remove('hidden');
+            
+            // Update Header Title
+            const titles = {
+                'dashboard': 'DASHBOARD',
+                'analyze': 'AI ANALYSIS',
+                'chat': 'CONSULTANT',
+                'search': 'PATIENT SEARCH'
+            };
+            document.getElementById('page-title').textContent = titles[tabName];
+        }
+
+        // --- 1. Dashboard Logic (MOCK) ---
+        function loadMockDashboard() {
+            // Mock Data Object
+            const stats = {
+                "total_patients": 2543,
+                "avg_age": 42.8,
+                "conditions": { "Hypertension": 320, "Diabetes": 215, "Asthma": 180, "Migraine": 95 },
+                "blood_types": { "O+": 850, "A+": 720, "B+": 510, "AB+": 120, "O-": 80 }
+            };
+
+            // Update DOM
+            document.getElementById('dash-total').textContent = stats.total_patients.toLocaleString();
+            document.getElementById('dash-age').textContent = stats.avg_age.toFixed(1);
+            document.getElementById('dash-conditions').textContent = Object.keys(stats.conditions).length;
+
+            // Render Blood Types as Icons
+            const bloodContainer = document.getElementById('blood-icons-container');
+            bloodContainer.innerHTML = '';
+            const bloods = Object.entries(stats.blood_types).slice(0, 5);
+            bloods.forEach(([type, count]) => {
+                const percent = Math.round((count / stats.total_patients) * 100);
+                bloodContainer.innerHTML += `
+                    <div class="flex flex-col items-center">
+                        <span class="text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-1">${type}</span>
+                        <div class="w-8 h-8 rounded-full bg-teal-50 border border-teal-100 flex items-center justify-center text-teal-600 font-bold text-xs mb-1 shadow-sm">
+                            ${percent}%
+                        </div>
+                        <input type="checkbox" class="custom-checkbox" checked disabled>
+                    </div>
+                `;
+            });
+
+            // Conditions Grid
+            const condGrid = document.getElementById('conditions-grid');
+            condGrid.innerHTML = '';
+            Object.entries(stats.conditions).slice(0, 4).forEach(([name, count]) => {
+                condGrid.innerHTML += `
+                    <div class="border border-gray-100 p-3 rounded bg-gray-50 flex flex-col justify-between h-24 hover:shadow-md transition-shadow cursor-pointer">
+                        <span class="text-xs text-gray-500 uppercase font-semibold truncate">${name}</span>
+                        <div class="flex items-end justify-between">
+                            <span class="text-2xl font-bold text-teal-600">${count}</span>
+                            <i class="fa-solid fa-chart-line text-gray-300"></i>
+                        </div>
+                    </div>
+                `;
+            });
+        }
+
+        // --- 2. Analyze Logic (MOCK) ---
+        document.getElementById('analyze-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const fileInput = document.getElementById('image-input');
+            const type = document.querySelector('input[name="type"]:checked').value;
+            
+            if(!fileInput.files[0]) { alert('Please select an image'); return; }
+
+            // Show Loading
+            document.getElementById('analysis-empty').classList.add('hidden');
+            document.getElementById('analysis-result').classList.add('hidden');
+            document.getElementById('analysis-loading').classList.remove('hidden');
+
+            // Simulate Network Delay (2 seconds)
+            setTimeout(() => {
+                // Mock Result Data
+                const mockResult = type === 'xray' 
+                    ? {
+                        type: 'xray',
+                        result: Math.random() > 0.5 ? 'Normal' : 'Pneumonia',
+                        confidence: (Math.random() * (99 - 85) + 85).toFixed(1) + '%'
+                      }
+                    : {
+                        type: 'blood',
+                        total_cells: Math.floor(Math.random() * 20) + 5,
+                        cell_counts: {'RBC': Math.floor(Math.random() * 15), 'WBC': Math.floor(Math.random() * 5)}
+                      };
+
+                renderAnalysisResult(mockResult);
+                document.getElementById('analysis-loading').classList.add('hidden');
+            }, 2000);
+        });
+
+        function renderAnalysisResult(data) {
+            document.getElementById('analysis-result').classList.remove('hidden');
+            const content = document.getElementById('result-content');
+            
+            if(data.type === 'xray') {
+                const color = data.result === 'Normal' ? 'text-teal-600' : 'text-red-500';
+                content.innerHTML = `<span class="text-2xl font-bold ${color}">${data.result}</span>`;
+                updateConfidence(data.confidence);
+            } else {
+                content.innerHTML = `
+                    <div class="flex justify-between items-center mb-2">
+                        <span class="text-sm text-gray-500">Total Cells</span>
+                        <span class="text-xl font-bold text-teal-600">${data.total_cells}</span>
+                    </div>
+                    <div class="grid grid-cols-2 gap-2 text-xs">
+                        ${Object.entries(data.cell_counts).map(([k,v]) => `
+                            <div class="bg-gray-100 px-2 py-1 rounded flex justify-between"><span>${k}</span> <b>${v}</b></div>
+                        `).join('')}
+                    </div>
+                `;
+                updateConfidence('100%');
+            }
+        }
+
+        function updateConfidence(valStr) {
+            const val = parseFloat(valStr);
+            document.getElementById('confidence-bar').style.width = val + '%';
+            document.getElementById('confidence-text').textContent = valStr;
+        }
+
+        // --- 3. Chat Logic (MOCK) ---
+        document.getElementById('chat-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const input = document.getElementById('chat-input');
+            const msg = input.value.trim();
+            if(!msg) return;
+
+            appendMsg('user', msg);
+            input.value = '';
+
+            // Simulate Reply delay
+            setTimeout(() => {
+                const replies = [
+                    "อาการเบื้องต้นดูปกติครับ แต่ถ้ามีไข้สูงแนะนำให้พบแพทย์ครับ",
+                    "เข้าใจแล้วครับ การพักผ่อนให้เพียงพอและดื่มน้ำเยอะๆ จะช่วยได้ครับ",
+                    "จากข้อมูลที่คุณให้มา อาจเป็นอาการภูมิแพ้เบื้องต้นครับ",
+                    "ครับ ผมบันทึกข้อมูลอาการนี้ลงในประวัติผู้ป่วยแล้วครับ"
+                ];
+                const randomReply = replies[Math.floor(Math.random() * replies.length)];
+                appendMsg('ai', randomReply);
+            }, 1000);
+        });
+
+        function appendMsg(sender, text) {
+            const container = document.getElementById('chat-messages');
+            const isUser = sender === 'user';
+            const html = `
+                <div class="flex gap-4 ${isUser ? 'flex-row-reverse' : ''} animate-fade-in">
+                    <div class="w-8 h-8 rounded-full ${isUser ? 'bg-gray-300' : 'bg-teal-600'} text-white flex items-center justify-center shrink-0 text-xs">
+                        ${isUser ? '<i class="fa-solid fa-user"></i>' : 'AI'}
+                    </div>
+                    <div class="${isUser ? 'bg-teal-500 text-white' : 'bg-gray-100 text-gray-700'} p-3 rounded-xl text-sm max-w-[80%] shadow-sm">
+                        ${text}
+                    </div>
+                </div>
+            `;
+            container.insertAdjacentHTML('beforeend', html);
+            container.scrollTop = container.scrollHeight;
+        }
+
+        async function clearChat() {
+             if(confirm('Clear history?')) {
+                document.getElementById('chat-messages').innerHTML = '';
+             }
+        }
+
+        // --- 4. Search Logic (MOCK) ---
+        document.getElementById('search-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const tbody = document.getElementById('search-results');
+            tbody.innerHTML = '<tr><td colspan="6" class="p-8 text-center text-teal-600"><i class="fa-solid fa-circle-notch animate-spin"></i> Searching (Mock)...</td></tr>';
+
+            // Simulate Delay
+            setTimeout(() => {
+                tbody.innerHTML = '';
+                // Mock Patients Data
+                const mockPatients = [
+                    { Name: "Somchai Jaidee", Age: 45, Gender: "Male", Blood: "O+", Condition: "Hypertension", Ins: "AIA Life" },
+                    { Name: "Jane Doe", Age: 32, Gender: "Female", Blood: "A+", Condition: "Migraine", Ins: "Muang Thai" },
+                    { Name: "Robert Smith", Age: 58, Gender: "Male", Blood: "B-", Condition: "Diabetes Type 2", Ins: "Bupa" },
+                    { Name: "Suda Kaewta", Age: 29, Gender: "Female", Blood: "AB+", Condition: "Normal", Ins: "Social Security" },
+                    { Name: "David Wilson", Age: 61, Gender: "Male", Blood: "O+", Condition: "Arthritis", Ins: "Allianz" },
+                ];
+
+                mockPatients.forEach(p => {
+                    tbody.innerHTML += `
+                        <tr class="hover:bg-teal-50 border-b border-gray-50 transition-colors">
+                            <td class="p-4 font-bold text-gray-700">${p.Name}</td>
+                            <td class="p-4">${p.Age}</td>
+                            <td class="p-4">${p.Gender}</td>
+                            <td class="p-4 font-bold text-teal-600">${p.Blood}</td>
+                            <td class="p-4"><span class="bg-gray-100 text-gray-700 px-2 py-0.5 rounded text-xs">${p.Condition}</span></td>
+                            <td class="p-4 text-gray-400 text-xs">${p.Ins}</td>
+                        </tr>
+                    `;
+                });
+            }, 800);
+        });
+
+        // CSS Animation for new messages
+        const style = document.createElement('style');
+        style.innerHTML = `
+            @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+            .animate-fade-in { animation: fadeIn 0.3s ease-out forwards; }
+        `;
+        document.head.appendChild(style);
+
+    </script>
+</body>
+</html>
